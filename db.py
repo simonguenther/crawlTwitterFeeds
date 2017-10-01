@@ -7,7 +7,7 @@ import re
 
 def open_connection():
 	conn = psycopg2.connect(database="projects_data", user = "postgres", password = "postgrespass", host = "127.0.0.1", port = "5432")
-	print "database successfully opened"
+	#print "database successfully opened"
 	return conn
 
 def insert_in_handle_info(conn,twitter_general_obj):
