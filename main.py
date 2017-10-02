@@ -20,9 +20,33 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 snapshot_global = False
+def get_description_information(self):
+	print str(strftime("%H:%M:%S", gmtime())) + ": Checking Description!"
+	conn = open_connection()
+	user_handle_list = get_twitter_urls(conn)
+	error_sites = []
+	try:
+		for user_handle in user_handle_list:
+			user = api.get_user(user_handle)
+			twitter_general_obj = {}
+			twitter_general_obj["join_date"] = user.created_at
+			twitter_general_obj["description"] = user.description
+			twitter_general_obj["handle"] = user.screen_name
+			twitter_general_obj["name"] = user.name
+			twitter_general_obj["tweetcount"] = user.statuses_count
+			twitter_general_obj["followercount"] = user.followers_count
+			twitter_general_obj["location"] = user.location
+			twitter_general_obj["desc_link"] = user.url
+			twitter_general_obj["time_lookup"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+			insert_in_handle_info(conn,twitter_general_obj)
+	except:
+		error_sites.append(user_handle)
+	conn.close()
+	print error_sites
 
-def run(self):
-	str(strftime("%H:%M:%S", gmtime())) + ": Checking feeds!"
+
+def get_twitter_feeds(self):
+	print str(strftime("%H:%M:%S", gmtime())) + ": Checking feeds!"
 	conn = open_connection()
 	user_handle_list = get_twitter_urls(conn)
 	error_sites = []
@@ -54,28 +78,12 @@ def run(self):
 				else:
 					twitter_feed_obj["retweet_from_handle"] = ""
 				if insert_in_twitter_feed(conn,twitter_feed_obj):
-					#print t,": id:",tweet.id_str," :",tweet.text.encode("utf-8")
-					print account,"\n\t",tweet.text.enode("utf-8")
+					print account,"\n\t :",content
 				t = t+1
-				# break
-
-			user = api.get_user(user_handle)
-			twitter_general_obj = {}
-			twitter_general_obj["join_date"] = user.created_at
-			twitter_general_obj["description"] = user.description
-			twitter_general_obj["handle"] = user.screen_name
-			twitter_general_obj["name"] = user.name
-			twitter_general_obj["tweetcount"] = user.statuses_count
-			twitter_general_obj["followercount"] = user.followers_count
-			twitter_general_obj["location"] = user.location
-			twitter_general_obj["desc_link"] = user.url
-			twitter_general_obj["time_lookup"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			if snapshot_global:
-				insert_in_handle_info(conn,twitter_general_obj)
-				snapshot_global == False
 		except:
 			error_sites.append(user_handle)
 
+	print error_sites
 	conn.close()
 
-	print error_sites
+	

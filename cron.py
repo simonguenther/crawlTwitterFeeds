@@ -7,13 +7,10 @@ import db
 def ping(self):
 	print str(strftime("%H:%M:%S", gmtime())) + ": alive!"
 
-def activateGlobalTracking(self):
-	print "Global Snapshot activated! Save general info from every Twitter feed"
-	main.snapshot_global = True
-
 schedule.every(30).minutes.do(ping,0)
-schedule.every(30).seconds.do(main.run,0)
-schedule.every(1).day.do(activateGlobalTracking,0)
+schedule.every(30).seconds.do(main.get_twitter_feeds,0)
+schedule.every().day.at("00:01").do(main.get_description_information,0)
+
 
 while True:
 	schedule.run_pending()
