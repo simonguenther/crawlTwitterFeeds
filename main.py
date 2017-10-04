@@ -8,18 +8,22 @@ from db import insert_in_twitter_feed,insert_in_handle_info,open_connection, get
 import json
 import datetime
 
-
-consumer_key = "TlyIHECSh3WWhlAE4kTZH8uzv"
-consumer_secret = "qM8DtIrkirjgY5BcX89lvXtk2kEUK1lXg3uVPCXGof5AVvxmgh"
-access_token = "912399918030974976-yIrqxPadAImudCU6KtX28xhUx3p7eiz"
-access_token_secret = "znXnm4JteceK3FLmrPzmTr2szEUvVYMjHVfgyUr8hsjVI"
+""" Tweepy API Settings """
+consumer_key = "USDOh2a9f8Z1PBXfbAmkSBxEC"
+consumer_secret = "LCDyTtrItqwJ9S4nAwZffarzeqyjOE4anZhxs7y3aMAhW60ZB4"
+access_token = "911961422791397376-EzE65iS50Xs4zp6rOvd2b11px8l5WTJ"
+access_token_secret = "1lVLwmY3evpa7dpVE60h4Im0j1Yx3FwJlZExrjqIDIxyp"
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 
-snapshot_global = False
+""" 
+
+	Extract description info from twitter profile
+
+"""
 def get_description_information(self):
 	print str(strftime("%H:%M:%S", gmtime())) + ": Checking Description!"
 	conn = open_connection()
@@ -43,18 +47,23 @@ def get_description_information(self):
 		error_sites.append(user_handle)
 	conn.close()
 	print error_sites
+"""
 
+	Get all twitter posts which are not already in the database
 
+"""
 def get_twitter_feeds(self):
 	print str(strftime("%H:%M:%S", gmtime())) + ": Checking feeds!"
 	conn = open_connection()
+
+	# Retrieve twitter handles from main database
 	user_handle_list = get_twitter_urls(conn)
 	error_sites = []
 
+	# Retrieve posts for every handle
 	for user_handle in user_handle_list:
 		try:
 			other_tweets = api.user_timeline(user_handle,count=100)
-			t = 1
 			for tweet in other_tweets:
 				# print dir(tweet)
 				if tweet.in_reply_to_status_id_str is not None:
@@ -78,8 +87,7 @@ def get_twitter_feeds(self):
 				else:
 					twitter_feed_obj["retweet_from_handle"] = ""
 				if insert_in_twitter_feed(conn,twitter_feed_obj):
-					print account,"\n\t :",content
-				t = t+1
+					print "New feed found @ " + account
 		except:
 			error_sites.append(user_handle)
 
