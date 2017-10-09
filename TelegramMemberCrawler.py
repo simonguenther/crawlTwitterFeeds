@@ -7,6 +7,7 @@ import datetime
 from db import open_connection, get_telegram_urls,insert_in_telegram_general
 import urllib
 from bs4 import BeautifulSoup
+import Statistics
 
 class TelegramMemberCrawler:
     def CrawlMembers(self):
@@ -29,7 +30,8 @@ class TelegramMemberCrawler:
                 insert_in_telegram_general(conn, pair)
                 #print "Analyzing: "+ user_handle + " @ " + str(member_count)
             else:
-                error_links.append(user_handle)
-        print "Telegram error_sites:"
-        print error_links
+                Statistics.add_telegram_error_sites(user_handle)
+                #error_links.append(user_handle)
+        #print "Telegram error_sites:"
+        #print error_links
 

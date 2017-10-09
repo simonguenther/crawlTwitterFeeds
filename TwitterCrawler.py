@@ -7,6 +7,7 @@ import tweepy
 from db import insert_in_twitter_feed,insert_in_handle_info,open_connection, get_twitter_urls
 import json
 import datetime
+import Statistics
 
 class Twitter_Crawler:
 	""" Tweepy API Settings """
@@ -44,10 +45,12 @@ class Twitter_Crawler:
 				twitter_general_obj["desc_link"] = user.url
 				twitter_general_obj["time_lookup"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 				insert_in_handle_info(conn,twitter_general_obj)
+				Statistics.inc_twitter_descriptions()
 		except:
-			error_sites.append(user_handle)
+			Statistics.add_twitter_error_sites(user_handle)
+			#error_sites.append(user_handle)
 		conn.close()
-		print error_sites
+		#print error_sites
 	"""
 
 		Get all twitter posts which are not already in the database
@@ -88,9 +91,11 @@ class Twitter_Crawler:
 					else:
 						twitter_feed_obj["retweet_from_handle"] = ""
 					if insert_in_twitter_feed(conn,twitter_feed_obj):
+						Statistics.inc_twitter_post()
 						print "New feed found @ " + account
 			except:
-				error_sites.append(user_handle)
+				Statistics.add_twitter_error_sites(user_handle)
+				#error_sites.append(user_handle)
 
 		#print error_sites
 		conn.close()

@@ -5,6 +5,7 @@ import praw
 from db import insert_in_reddit_handle_info,insert_in_reddit_post,open_connection, get_reddit_urls
 import json
 import datetime
+import Statistics
 from time import gmtime, strftime
 
 class RedditCrawler:
@@ -41,8 +42,10 @@ class RedditCrawler:
                 reddit_general_obj["time_lookup"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 reddit_general_obj["time_creation"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 insert_in_reddit_handle_info(self.conn,reddit_general_obj)
+                Statistics.inc_reddit_descriptions()
         except StandardError as e:
-            print "[get_reddit_general()-ERROR at " + str(user_handle) + "\n"+str(e)
+            Statistics.add_reddit_error_sites(user_handle + "\t" + str(e))
+            #print "[get_reddit_general()-ERROR at " + str(user_handle) + "\n"+str(e)
 
     def get_reddit_posts(self):
         try:
@@ -78,7 +81,9 @@ class RedditCrawler:
                     reddit_post_obj["timestamp"] = epoch.strftime("%Y-%m-%d %H:%M:%S")
 
                     insert_in_reddit_post(self.conn,reddit_post_obj)
+                    Statistics.inc_reddit_post()
                     #print reddit_post_obj
                     # break
         except StandardError as e:
-            print "[get_reddit_posts()-ERROR at " + str(user_handle) + " @ " + submission.url + "\n"+str(e)
+            Statistics.add_reddit_error_sites(user_handle + "\t" + str(e))
+            #print "[get_reddit_posts()-ERROR at " + str(user_handle) + " @ " + submission.url + "\n"+str(e)
