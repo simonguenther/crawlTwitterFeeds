@@ -9,11 +9,11 @@ import Statistics
 from time import gmtime, strftime
 
 class RedditCrawler:
-    username = 'Langustico'
-    password = 'reddit0815'
-    client_id = 'RLqUsu7C2SqWQw'
-    client_secret = 'GUlPPaSkVn_L5vd1qwNYcoEDa04'
-    UA = 'Over 9000 Bot by /u/Langustico'
+    username = 'bhvi'
+    password = '!1Bhavya'
+    client_id = 'O0oy5piyZ9HxFA'
+    client_secret = 'xgx_MidZbfC9jc8HkN2xc5Qk4BU'
+    UA = 'Over 9000 Bot by /u/bhvi'
 
     conn = open_connection()
 

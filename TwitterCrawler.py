@@ -33,7 +33,7 @@ class Twitter_Crawler:
 		error_sites = []
 		try:
 			for user_handle in user_handle_list:
-				print "Checking " + user_handle
+				#print "Checking " + user_handle
 				user = self.api.get_user(user_handle)
 				twitter_general_obj = {}
 				twitter_general_obj["join_date"] = user.created_at
@@ -70,7 +70,7 @@ class Twitter_Crawler:
 
 		# Retrieve posts for every handle
 		for user_handle in user_handle_list:
-			print "Checking " + user_handle 
+			#print "Checking " + user_handle 
 			try:
 				other_tweets = self.api.user_timeline(user_handle,count=100)
 				for tweet in other_tweets:
