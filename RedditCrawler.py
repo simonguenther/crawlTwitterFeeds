@@ -6,22 +6,20 @@ from db import insert_in_reddit_handle_info,insert_in_reddit_post,open_connectio
 import json
 import datetime
 import Statistics
+from load_login_credentials import Login
 from time import gmtime, strftime
 
 class RedditCrawler:
-    username = 'bhvi'
-    password = '!1Bhavya'
-    client_id = 'O0oy5piyZ9HxFA'
-    client_secret = 'xgx_MidZbfC9jc8HkN2xc5Qk4BU'
-    UA = 'Over 9000 Bot by /u/bhvi'
+
+    reddit_credentials = Login.get_reddit_credentials()
+    #username = reddit_credentials["username"],
+    #password = reddit_credentials["password"],
+
+    r = praw.Reddit(client_id = reddit_credentials["client_id"],
+                    client_secret = reddit_credentials["client_secret"],
+                    user_agent = reddit_credentials["user_agent"])
 
     conn = open_connection()
-
-    r = praw.Reddit(username = username,
-                password = password,
-                client_id = client_id,
-                client_secret = client_secret,
-                user_agent = UA)
 
     user_handle_list = get_reddit_urls(conn)
     
