@@ -115,3 +115,45 @@ def insert_in_reddit_post(conn,reddit_general_obj):
 		cur = conn.cursor()
 		cur.execute(query)
 		conn.commit()
+
+"""##########"""
+""" FACEBOOK """
+"""##########"""
+
+def get_facebook_urls(conn):
+	query = "SELECT facebook FROM projects_main WHERE facebook != ''"
+	cur = conn.cursor()
+	cur.execute(query)
+	rows = cur.fetchall()
+	handles = []
+	if rows and len(rows)>0:
+		for row in rows:
+			handles.append(row[0])
+	return handles
+
+
+def insert_in_facebook_handle_info(conn,facebook_general_obj):
+	query = "INSERT INTO facebook_general (id,handle,name,rating,count_reviews,count_likes,count_followers,time_lookup,url) \
+      VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s' )" % (facebook_general_obj["id"],facebook_general_obj["handle"],facebook_general_obj["name"],facebook_general_obj["rating"],facebook_general_obj["count_reviews"],facebook_general_obj["count_likes"],facebook_general_obj["count_followers"],facebook_general_obj["time_lookup"],facebook_general_obj["url"])
+	cur = conn.cursor()
+	cur.execute(query)
+	conn.commit()
+
+def insert_in_facebook_post(conn,facebook_general_obj):
+	if check_is_facebook_post_exists(conn,facebook_general_obj["id"]) == False:
+		query = "INSERT INTO facebook_posts (id,url,handle,content,timestamp,time_lookup) \
+	      VALUES ('%s','%s','%s','%s','%s','%s' )" % (facebook_general_obj["id"],facebook_general_obj["url"],facebook_general_obj["handle"],facebook_general_obj["content"],facebook_general_obj["timestamp"],facebook_general_obj["time_lookup"])
+		cur = conn.cursor()
+		cur.execute(query)
+		conn.commit()
+
+def check_is_facebook_post_exists(conn,post_id):
+	post_exists = False
+	query = "SELECT * FROM facebook_posts where id='%s'" % post_id
+	cur = conn.cursor()
+	cur.execute(query)
+	rows = cur.fetchall()
+	if rows and len(rows)>0:
+		post_exists = True
+	return post_exists
+
