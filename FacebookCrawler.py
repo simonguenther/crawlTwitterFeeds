@@ -77,7 +77,7 @@ class FacebookCrawler:
                     facebook_post_obj["timestamp"] = post.get("created_time","")
                     facebook_post_obj["time_lookup"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     insert_in_facebook_post(self.conn,facebook_post_obj)
-                    print(facebook_post_obj["id"],":...inserted")
+                    #print(facebook_post_obj["id"],":...inserted")
             except StandardError as e:
             #    print user_handle + "\t" + str(e)
                 Statistics.add_facebook_error_sites(user_handle + "\t" + str(e))
