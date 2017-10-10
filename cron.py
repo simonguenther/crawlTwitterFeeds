@@ -4,6 +4,7 @@ from time import gmtime, strftime
 from TwitterCrawler import Twitter_Crawler
 from TelegramMemberCrawler import TelegramMemberCrawler
 from RedditCrawler import RedditCrawler
+from FacebookCrawler import FacebookCrawler
 import db
 import Statistics
 
@@ -45,15 +46,17 @@ def create_report():
 twitter = Twitter_Crawler()
 telegram = TelegramMemberCrawler()
 reddit = RedditCrawler()
-
+facebook = FacebookCrawler()
 
 schedule.every(30).minutes.do(ping,0)
 schedule.every(180).seconds.do(twitter.get_twitter_feeds)
 schedule.every(180).seconds.do(reddit.get_reddit_posts)
+schedule.every(180).seconds.do(facebook.get_facebook_posts)
 schedule.every().day.at("00:01").do(twitter.get_description_information)
 schedule.every().day.at("00:01").do(telegram.CrawlMembers)
 schedule.every().day.at("00:01").do(reddit.get_reddit_general)
-schedule.every().day.at("00:01").do(create_report)
+schedule.every().day.at("00:01").do(facebook.get_description_information)
+schedule.every().day.at("00:11").do(create_report)
 
 while True:
 	schedule.run_pending()

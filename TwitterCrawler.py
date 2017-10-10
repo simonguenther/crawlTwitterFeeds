@@ -8,13 +8,15 @@ from db import insert_in_twitter_feed,insert_in_handle_info,open_connection, get
 import json
 import datetime
 import Statistics
+from load_login_credentials import Login
 
 class Twitter_Crawler:
-	""" Tweepy API Settings """
-	consumer_key = "USDOh2a9f8Z1PBXfbAmkSBxEC"
-	consumer_secret = "LCDyTtrItqwJ9S4nAwZffarzeqyjOE4anZhxs7y3aMAhW60ZB4"
-	access_token = "911961422791397376-EzE65iS50Xs4zp6rOvd2b11px8l5WTJ"
-	access_token_secret = "1lVLwmY3evpa7dpVE60h4Im0j1Yx3FwJlZExrjqIDIxyp"
+	twitter_credentials = Login.get_twitter_credentials()
+
+	consumer_key = twitter_credentials["consumer_key"]
+	consumer_secret = twitter_credentials["consumer_secret"]
+	access_token = twitter_credentials["access_token"]
+	access_token_secret = twitter_credentials["access_token_secret"]
 
 	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 	auth.set_access_token(access_token, access_token_secret)
