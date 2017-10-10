@@ -33,7 +33,8 @@ class Twitter_Crawler:
 		error_sites = []
 		try:
 			for user_handle in user_handle_list:
-				user = api.get_user(user_handle)
+				print "Checking " + user_handle
+				user = self.api.get_user(user_handle)
 				twitter_general_obj = {}
 				twitter_general_obj["join_date"] = user.created_at
 				twitter_general_obj["description"] = user.description
@@ -46,9 +47,12 @@ class Twitter_Crawler:
 				twitter_general_obj["time_lookup"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 				insert_in_handle_info(conn,twitter_general_obj)
 				Statistics.inc_twitter_descriptions()
-		except:
-			Statistics.add_twitter_error_sites(user_handle)
+		except StandardError as e:
+			Statistics.add_twitter_error_sites(user_handle + "\t" + str(e))
 			#error_sites.append(user_handle)
+		except tweepy.TweepError as e:
+			#message = str(e.message[0]['code']) + "\n" + str(e.args[0][0]['code'])
+			Statistics.add_twitter_error_sites(user_handle + "\t" + str(e.message))
 		conn.close()
 		#print error_sites
 	"""
@@ -57,7 +61,7 @@ class Twitter_Crawler:
 
 	"""
 	def get_twitter_feeds(self):
-		print str(strftime("%H:%M:%S", gmtime())) + ": Checking feeds!"
+		print str(strftime("%H:%M:%S", gmtime())) + ": Checking Twitter feeds!"
 		conn = open_connection()
 
 		# Retrieve twitter handles from main database
@@ -66,10 +70,10 @@ class Twitter_Crawler:
 
 		# Retrieve posts for every handle
 		for user_handle in user_handle_list:
+			print "Checking " + user_handle 
 			try:
-				other_tweets = api.user_timeline(user_handle,count=100)
+				other_tweets = self.api.user_timeline(user_handle,count=100)
 				for tweet in other_tweets:
-					# print dir(tweet)
 					if tweet.in_reply_to_status_id_str is not None:
 						continue
 					# print "retweet_from_handle: ",tweet.retweeted
@@ -93,8 +97,12 @@ class Twitter_Crawler:
 					if insert_in_twitter_feed(conn,twitter_feed_obj):
 						Statistics.inc_twitter_post()
 						print "New feed found @ " + account
-			except:
-				Statistics.add_twitter_error_sites(user_handle)
+			except StandardError as e:
+				Statistics.add_twitter_error_sites(user_handle + "\t" + str(e))
+				#error_sites.append(user_handle)
+			except tweepy.TweepError as e:
+				#message = str(e.message[0]['code']) + "\n" + str(e.args[0][0]['code'])
+				Statistics.add_twitter_error_sites(user_handle + "\t" + str(e.message))
 				#error_sites.append(user_handle)
 
 		#print error_sites

@@ -9,11 +9,11 @@ import Statistics
 from time import gmtime, strftime
 
 class RedditCrawler:
-    username = 'bhvi'
-    password = '!1Bhavya'
-    client_id = 'O0oy5piyZ9HxFA'
-    client_secret = 'xgx_MidZbfC9jc8HkN2xc5Qk4BU'
-    UA = 'Over 9000 Bot by /u/bhvi'
+    username = 'Langustico'
+    password = 'reddit0815'
+    client_id = 'RLqUsu7C2SqWQw'
+    client_secret = 'GUlPPaSkVn_L5vd1qwNYcoEDa04'
+    UA = 'Over 9000 Bot by /u/Langustico'
 
     conn = open_connection()
 
@@ -85,5 +85,5 @@ class RedditCrawler:
                     #print reddit_post_obj
                     # break
         except StandardError as e:
-            Statistics.add_reddit_error_sites(user_handle + "\t" + str(e))
+            Statistics.add_reddit_error_sites(user_handle + "\t" + str(e)+ " @ " + submission.url)
             #print "[get_reddit_posts()-ERROR at " + str(user_handle) + " @ " + submission.url + "\n"+str(e)

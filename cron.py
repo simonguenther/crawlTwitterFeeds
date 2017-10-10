@@ -11,7 +11,7 @@ def ping(self):
 	print str(strftime("%H:%M:%S", gmtime())) + ": alive!"
 
 def save_to_file(text, filename):
-	with open(filename+'.py', 'w') as file:
+	with open(filename, 'w') as file:
 		file.write(text)
 
 def create_report():
@@ -46,7 +46,7 @@ twitter = Twitter_Crawler()
 telegram = TelegramMemberCrawler()
 reddit = RedditCrawler()
 
-schedule.every(10).minutes.do(create_report)
+
 schedule.every(30).minutes.do(ping,0)
 schedule.every(180).seconds.do(twitter.get_twitter_feeds)
 schedule.every(180).seconds.do(reddit.get_reddit_posts)
