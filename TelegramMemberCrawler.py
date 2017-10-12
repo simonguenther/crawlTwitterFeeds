@@ -22,7 +22,8 @@ class TelegramMemberCrawler:
             soup = BeautifulSoup(htmltext, "lxml")
             first = soup.find("div", {"class":"tgme_page_extra"})
             if first is not None:
-                member_count = first.text.split()[0].strip()
+                member_count = first.text.strip(' members')
+                member_count = member_count.replace(' ','')
                 pair = {}
                 pair["symbol"] = user_handle
                 pair["members"] = member_count
